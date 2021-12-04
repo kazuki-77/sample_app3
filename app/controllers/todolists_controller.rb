@@ -5,12 +5,12 @@ class TodolistsController < ApplicationController
   end
 
   def create
-    #1. データを新規登録するためのインスタンス作成
-    list = List.new(list_params)
-    #2. データをデータベースに保存するためのsaveメソッド実行
-    list.save
-    #3. トップ画面へリダイレクト
-    redirect_to todolist_path(list.id)
+    @list = List.new(list_params)
+    if @list.save
+      redirect_to todolist_path(@list.id)
+    else
+      render:new #render:アクション名でコントローラ内の別アクションのViewを表示できる
+    end
   end
 
   def index
@@ -29,6 +29,12 @@ class TodolistsController < ApplicationController
     list = List.find(params[:id])
     list.update(list_params)
     redirect_to todolist_path(list.id)
+  end
+
+  def destroy
+    list = List.find(params[:id])
+    list.destroy
+    redirect_to todolists_path
   end
 
   private
